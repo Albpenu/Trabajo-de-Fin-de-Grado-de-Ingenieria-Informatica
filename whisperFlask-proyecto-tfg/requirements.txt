@@ -1,0 +1,6 @@
+deep-translator==1.10.1
+flask==2.3.2
+openai-whisper==20230124
+python-multipart==0.0.5
+torch==2.0.1
+yt_dlp==2023.3.4

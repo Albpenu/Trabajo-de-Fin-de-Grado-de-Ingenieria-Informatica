@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Procesando...</title>
+    <meta http-equiv="refresh" content="5">
+</head>
+<body>
+    <h1>Procesando...</h1>
+    <p>Por favor, espere mientras se realiza la transcripción del archivo de audio.</p>
+    <p>Identificador de tarea: {{ task_id }}</p>
+    <script>
+        // Obtener la URL de redirección desde el servidor
+        fetch('/transcribe_audio')
+            .then(response => response.text())
+            .then(url => {
+                // Redirigir al usuario a la URL recibida
+                window.location.href = url;
+            });
+    </script>
+</body>
+</html>

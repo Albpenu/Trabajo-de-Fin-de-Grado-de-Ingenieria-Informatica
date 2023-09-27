@@ -1,0 +1,12 @@
+celery==5.2.7
+deep-translator==1.10.1
+fastapi==0.95.2
+ffmpeg-python==0.2.0
+Jinja2==3.1.2
+numpy==1.25.0
+python-multipart==0.0.5
+uvicorn==0.20.0
+# jax==0.4.13
+# --find-links https://storage.googleapis.com/jax-releases/jax_releases.html
+# jax[cuda111]
+# whisper-jax @ git+https://github.com/sanchit-gandhi/whisper-jax.git@68b658ffe7bf5ab4ea01a78e3b1a9c207db3e144

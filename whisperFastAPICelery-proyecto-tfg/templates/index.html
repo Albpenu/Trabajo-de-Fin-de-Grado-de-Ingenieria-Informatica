@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formularios de transcripción de audio a texto</title>
+</head>
+<body>
+    <h1>Formularios de transcripción de audio a texto</h1>
+    <form action="/transcripcion_grabacion" method="post" enctype="multipart/form-data">
+        <label for="botonGrabar">Pulse el botón para grabar un audio:</label>
+        <input type="button" id="botonGrabar" onclick="cambiarEstado()" value="Grabar audio">
+        <span id="estado"></span>
+        <audio id="previsualizacionAudio" controls></audio>
+        <input id="archivoAudio" name="audiograbado" type="file" style="display: none;">
+        <button id="btnTranscribir" type="submit" style="display: none;">Transcribir</button>
+    </form>
+    <br><br>
+    <form action="/transcripcion_archivo" method="post" enctype="multipart/form-data">
+        <label for="miarchivo_audio">Suba un audio local:</label>
+        <input request type="file" id="miarchivo_audio" name="archivo_audio">
+        <button type="submit">Transcribir</button>
+    </form>
+    <br><br>
+    <form action="/transcripcion_video" method="post" enctype="multipart/form-data">
+        <label for="mienlace_audio">Escriba la URL del vídeo de Youtube con el audio a transcribir:</label>
+        <input type="text" id="mienlace_audio" name="url">
+        <button type="submit">Transcribir</button>
+    </form>
+    <script type="text/javascript">
+
+        let mediaRecorder;
+        let chunks = [];
+        let estaGrabando = false;
+        const spanEstado = document.getElementById("estado");
+        const botonGrabar = document.getElementById("botonGrabar");
+        const reproductor = document.getElementById("previsualizacionAudio");
+        const archivoAudio = document.getElementById("archivoAudio");
+        const btnTranscribir = document.getElementById("btnTranscribir");
+        let transferenciaArchivo = new DataTransfer();
+
+        reproductor.style.display = 'none';
+
+        async function cambiarEstado(){
+            
+            if(!estaGrabando) 
+            {
+                navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.ondataavailable = (e) => {
+                        chunks.push(e.data);
+                    };
+                    mediaRecorder.onstop = (e) => {
+                        crearGrabacion();
+                    };
+                    mediaRecorder.onerror = (e) => {};
+                    mediaRecorder.start();
+                });
+
+                spanEstado.innerHTML = "Grabando...";
+                botonGrabar.value = 'Parar grabación';
+                reproductor.style.display = 'none';
+            }
+            else 
+            {
+                mediaRecorder.stop();
+                spanEstado.innerHTML = "Grabación detenida";
+                botonGrabar.value = 'Grabar audio';
+                reproductor.style.display = 'block';
+                btnTranscribir.style.display = 'block';
+            }
+
+            estaGrabando = !estaGrabando;
+
+        }
+
+        function crearGrabacion() {
+            const blob = new Blob(chunks, {
+                type: "audio/wav"
+            });
+            const audioURL = URL.createObjectURL(blob);
+            reproductor.src = audioURL;
+
+            const archivo = new File([blob], "grabacion.wav", {type: "audio/wav", lastModified:new Date().getTime()});
+            transferenciaArchivo.clearData();
+            transferenciaArchivo.items.add(archivo);
+            archivoAudio.files = transferenciaArchivo.files;
+            mediaRecorder = null;
+            chunks = [];
+        }
+
+    </script>
+</body>
+</html>

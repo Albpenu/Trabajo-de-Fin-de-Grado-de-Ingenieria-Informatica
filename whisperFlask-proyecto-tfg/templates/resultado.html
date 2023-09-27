@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Resultados</title>
+    {{ ventanaProcesamiento|safe }}
+</head>
+<body>
+    <h1>Resultado de la transcripción del archivo de título "{{ nombreArchivo }}":</h1>
+    <ul style="list-style-type:disc">
+        <li>Tiene formato "{{ formato }}"</li>
+        <li>Su audio está en idioma "{{ idioma }}"</li>
+    </ul>
+    <h2>Tiempo de transcripción: <u>{{ tiempoTranscripcion }} segundos</u></h2>
+    <h2>Transcripción:</h2>
+    <p>{{ transcripcion }}</p>
+</body>
+</html>
